@@ -1,4 +1,3 @@
-
 const jsonServer = require("json-server");
 const cors = require("cors");
 
@@ -7,17 +6,17 @@ const router = jsonServer.router("db.json");
 const middlewares = jsonServer.defaults();
 
 server.use(middlewares);
-server.use(
-  cors({
-    origin: "*",
-    methods: ["GET", "POST", "PATCH", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+
+server.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*"); // Allow all origins
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
 
 server.use("/api", router);
 
-server.listen(process.env.PORT || 3000, () => {
-  console.log("JSON Server is running");
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`JSON Server is running on port ${PORT}`);
 });
-
